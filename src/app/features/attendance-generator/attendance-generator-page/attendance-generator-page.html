@@ -1,0 +1,73 @@
+<section class="page">
+  <div class="card">
+    <h1>Generador de Listas de Asistencia | POC</h1>
+    <p class="subtitle">Coordinación Estatal IMSS Bienestar BC</p>
+
+    <div class="form-grid">
+      <label>
+        <span>Nombre del empleado</span>
+        <input
+          type="text"
+          [(ngModel)]="employeeName"
+          placeholder="Ej. SERRANO FLORES MARIO ARTURO"
+        />
+      </label>
+
+      <label>
+        <span>Año</span>
+        <input type="number" [(ngModel)]="year" />
+      </label>
+
+      <label>
+        <span>Mes</span>
+        <select [(ngModel)]="month">
+          <option [ngValue]="1">Enero</option>
+          <option [ngValue]="2">Febrero</option>
+          <option [ngValue]="3">Marzo</option>
+          <option [ngValue]="4">Abril</option>
+          <option [ngValue]="5">Mayo</option>
+          <option [ngValue]="6">Junio</option>
+          <option [ngValue]="7">Julio</option>
+          <option [ngValue]="8">Agosto</option>
+          <option [ngValue]="9">Septiembre</option>
+          <option [ngValue]="10">Octubre</option>
+          <option [ngValue]="11">Noviembre</option>
+          <option [ngValue]="12">Diciembre</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="actions">
+      <button (click)="generatePreview()" [disabled]="loading()">
+        {{ loading() ? 'Generando...' : 'Generar vista previa' }}
+      </button>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="alert error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (preview(); as data) {
+      <div class="preview">
+        <h2>Resultado</h2>
+
+        <p><strong>Nombre:</strong> {{ data.employee.fullName }}</p>
+        <p><strong>Puesto:</strong> {{ data.employee.position }}</p>
+        <p><strong>Jornada:</strong> {{ data.employee.workSchedule }}</p>
+        <p><strong>Horario:</strong> {{ data.employee.workingHours }}</p>
+        <p><strong>Adscripción:</strong> {{ data.employee.department }}</p>
+
+        <hr />
+        @let fines = data.days.filter((day) => day.isWeekend);
+        @let holidays = data.days.filter((day) => day.isHoliday);
+        @let totalDays = data.days.length;
+        <p><strong>Mes:</strong> {{ data.monthLabel }} {{ data.year }}</p>
+        <p><strong>Días del mes:</strong> {{ totalDays }}</p>
+        <p><strong>Fines de semana:</strong> {{ fines.length }}</p>
+        <p><strong>Festivos detectados:</strong> {{ holidays.length }}</p>
+      </div>
+    }
+  </div>
+</section>
